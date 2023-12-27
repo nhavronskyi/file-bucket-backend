@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url:
+    username:
+    password:
+  flyway:
+    baselineOnMigrate: true
+  security:
+    user:
+      name: admin
+      password: admin
+      roles: ADMIN
