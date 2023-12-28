@@ -2,8 +2,8 @@ package org.nhavronskyi.filebucketbackend.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.nhavronskyi.filebucketbackend.entities.Analysis;
 import org.nhavronskyi.filebucketbackend.service.VirusTotalService;
-import org.nhavronskyi.filebucketbackend.service.impl.VirusTotalServiceImpl;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +25,12 @@ public class FileTransferringController {
 
     @SneakyThrows
     @GetMapping(value = "save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public VirusTotalServiceImpl.Analysis saveFile(@RequestParam("file") MultipartFile file) {
+    public Analysis saveFile(@RequestParam("file") MultipartFile file) {
         if (!file.isEmpty()) {
+//            File newFile = new File("src/main/java/org/nhavronskyi/filebucketbackend/files/" + file.getOriginalFilename());
+//            try (OutputStream outStream = new FileOutputStream(newFile)) {
+//                outStream.write(file.getBytes());
+//            }
             return virusTotalService.checkFile(file);
         }
         return null;

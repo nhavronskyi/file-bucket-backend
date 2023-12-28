@@ -2,9 +2,8 @@ package org.nhavronskyi.filebucketbackend.service.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.nhavronskyi.filebucketbackend.entities.Analysis;
 import org.nhavronskyi.filebucketbackend.props.VirusTotalProps;
 import org.nhavronskyi.filebucketbackend.service.VirusTotalService;
 import org.springframework.http.MediaType;
@@ -25,9 +24,9 @@ public class VirusTotalServiceImpl implements VirusTotalService {
         return getAnalysis(getAnswer(file));
     }
 
-    private Analysis getAnalysis(Answer answer) {
+    private Analysis getAnalysis(String answer) {
         var res = restClient.get()
-                .uri("https://www.virustotal.com/api/v3/analyses/" + answer.id)
+                .uri("https://www.virustotal.com/api/v3/analyses/" + answer)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("x-apikey", virusTotalProps.ApiKey())
                 .retrieve()
@@ -45,41 +44,25 @@ public class VirusTotalServiceImpl implements VirusTotalService {
     }
 
 
-    private Answer getAnswer(MultipartFile file) {
+    private String getAnswer(MultipartFile file) {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("file", file.getResource());
 
         var answer = restClient.post()
                 .uri("https://www.virustotal.com/api/v3/files")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("x-apikey", virusTotalProps.ApiKey())
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(body)
                 .retrieve()
                 .toEntity(String.class);
 
         var data = new Gson()
                 .fromJson(answer.getBody(), JsonObject.class)
-                .get("data");
+                .get("data")
+                .getAsJsonObject()
+                .get("id");
 
-        return new Gson().fromJson(data, Answer.class);
-    }
-
-    @Data
-    @NoArgsConstructor
-    public static class Answer {
-        private String type;
-        private String id;
-    }
-
-    @Data
-    @NoArgsConstructor
-    public static class Analysis {
-        private String harmless;
-        private String suspicious;
-        private String timeout;
-        private String failure;
-        private String malicious;
-        private String undetected;
+        return new Gson().fromJson(data, String.class);
     }
 }
