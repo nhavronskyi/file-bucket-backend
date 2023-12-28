@@ -1,10 +1,8 @@
 POST /api/v3/files HTTP/1.1
 Accept: application/json
-X-Apikey: 31efe31d9d1774810af64d01dfaed51211feba42e15e65e41507ac69450b602b
+X-Apikey:
 Content-Type: multipart/form-data; boundary=---011000010111000001101001
 Host: www.virustotal.com
-Content-Length: 625
-
 
 #{
 #  "data": {
@@ -20,4 +18,4 @@ Content-Length: 625
 
 GET https://www.virustotal.com/api/v3/analyses/ZTY5MTE3YThmM2Q0ZWExYjI2M2E4NzA3NjZmMzZiOTk6MTcwMzY5NTUwMQ== HTTP/1.1
 Accept: application/json
-X-Apikey: 31efe31d9d1774810af64d01dfaed51211feba42e15e65e41507ac69450b602b
+X-Apikey:

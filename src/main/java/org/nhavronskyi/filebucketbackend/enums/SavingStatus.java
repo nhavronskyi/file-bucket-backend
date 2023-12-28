@@ -1,5 +1,5 @@
 package org.nhavronskyi.filebucketbackend.enums;
 
-public enum SavingStatus{
+public enum SavingStatus {
     SAVED, ERROR
 }

@@ -10,3 +10,5 @@ spring:
       name: admin
       password: admin
       roles: ADMIN
+virustotal:
+  api-key:
