@@ -1,21 +1,12 @@
 POST /api/v3/files HTTP/1.1
 Accept: application/json
-X-Apikey:
-Content-Type: multipart/form-data; boundary=---011000010111000001101001
+X-Apikey: <virustotal API key>
+Content-Type: multipart/form-data;
 Host: www.virustotal.com
-
-#{
-#  "data": {
-#    "type": "analysis",
-#    "id": "ZTY5MTE3YThmM2Q0ZWExYjI2M2E4NzA3NjZmMzZiOTk6MTcwMzY5NTUwMQ==",
-#    "links": {
-#      "self": "https://www.virustotal.com/api/v3/analyses/ZTY5MTE3YThmM2Q0ZWExYjI2M2E4NzA3NjZmMzZiOTk6MTcwMzY5NTUwMQ=="
-#    }
-#  }
-#}
+Content-Length: 625
 
 ###
 
 GET https://www.virustotal.com/api/v3/analyses/ZTY5MTE3YThmM2Q0ZWExYjI2M2E4NzA3NjZmMzZiOTk6MTcwMzY5NTUwMQ== HTTP/1.1
 Accept: application/json
-X-Apikey:
+X-Apikey:  <virustotal API key>
