@@ -2,6 +2,6 @@ package org.nhavronskyi.filebucketbackend.props;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("virus-total")
-public record VirusTotalProps(String ApiKey) {
+@ConfigurationProperties(prefix = "aws.s3")
+public record AwsS3Props(String key, String secret, String bucket) {
 }

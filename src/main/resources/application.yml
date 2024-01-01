@@ -12,3 +12,8 @@ spring:
       roles: ADMIN
 virustotal:
   api-key:
+aws:
+  s3:
+    key:
+    secret:
+    bucket:
