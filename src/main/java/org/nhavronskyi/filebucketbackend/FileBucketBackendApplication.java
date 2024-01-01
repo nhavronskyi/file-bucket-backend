@@ -1,5 +1,6 @@
 package org.nhavronskyi.filebucketbackend;
 
+import org.nhavronskyi.filebucketbackend.props.AwsS3Props;
 import org.nhavronskyi.filebucketbackend.props.VirusTotalProps;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @SpringBootApplication
 @EnableWebSecurity
-@EnableConfigurationProperties({VirusTotalProps.class})
+@EnableConfigurationProperties({VirusTotalProps.class, AwsS3Props.class})
 public class FileBucketBackendApplication {
 
     public static void main(String[] args) {
