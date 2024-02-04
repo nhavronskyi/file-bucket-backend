@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/register")
+    @PostMapping("register")
     public void register(@RequestBody RegisterRequest request) {
         authenticationService.register(request);
     }
