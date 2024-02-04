@@ -16,14 +16,14 @@ public class FileServiceImpl implements FileService {
     private final AwsS3ServiceImpl awsS3Service;
 
     @Override
-    public SavingStatus save(MultipartFile file) {
+    public SavingStatus save(MultipartFile file, long userId) {
         var analysis = virusTotalService.checkFile(file);
 
         if (analysis.getMalicious() != 0 || analysis.getSuspicious() != 0) {
             return SavingStatus.MALICIOUS;
         }
 
-        return awsS3Service.save(file);
+        return awsS3Service.save(file, userId);
     }
 
     @Override

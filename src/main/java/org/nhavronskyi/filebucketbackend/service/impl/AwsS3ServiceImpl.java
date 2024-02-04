@@ -25,8 +25,8 @@ public class AwsS3ServiceImpl implements AwsS3Service {
 
     @Override
     @SneakyThrows
-    public SavingStatus save(MultipartFile file) {
-        fileNameGenerator(file);
+    public SavingStatus save(MultipartFile file, long dirId) {
+        fileNameGenerator(file, dirId);
         return saveHelper(file.getBytes()) ? contains() : SavingStatus.ERROR;
     }
 
@@ -45,8 +45,8 @@ public class AwsS3ServiceImpl implements AwsS3Service {
         }
     }
 
-    private void fileNameGenerator(MultipartFile file) {
-        fileName = file.getOriginalFilename();
+    private void fileNameGenerator(MultipartFile file, long dirId) {
+        fileName = dirId + "/" + file.getOriginalFilename();
     }
 
     private SavingStatus contains() {
