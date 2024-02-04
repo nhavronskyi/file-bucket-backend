@@ -1,6 +1,7 @@
 package org.nhavronskyi.filebucketbackend.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.nhavronskyi.filebucketbackend.entities.Analysis;
 import org.nhavronskyi.filebucketbackend.enums.SavingStatus;
 import org.nhavronskyi.filebucketbackend.service.FileService;
 import org.nhavronskyi.filebucketbackend.service.VirusTotalService;
@@ -23,5 +24,10 @@ public class FileServiceImpl implements FileService {
         }
 
         return awsS3Service.save(file);
+    }
+
+    @Override
+    public Analysis checkFile(MultipartFile file) {
+        return virusTotalService.checkFile(file);
     }
 }
