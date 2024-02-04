@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,35 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     private final AwsS3Props props;
     private String fileName;
 
+    @Override
+    public Map<String, Long> getDirectoryFilesNamesAndSizes(long dirId) {
+        var directory = ListObjectsV2Request.builder()
+                .bucket(props.bucket())
+                .build();
+
+        ListObjectsV2Response listObjectsV2Response = s3Client.listObjectsV2(directory);
+
+        List<S3Object> contents = listObjectsV2Response.contents();
+
+        return contents.stream()
+                .filter(x -> x.key().startsWith(String.valueOf(dirId)))
+                .collect(Collectors.toMap(x -> x.key().replace(dirId + "/", ""), S3Object::size));
+    }
+
+    @Override
+    public Long getDirectorySize(long dirId) {
+        var directory = ListObjectsV2Request.builder()
+                .bucket(props.bucket())
+                .build();
+
+        ListObjectsV2Response listObjectsV2Response = s3Client.listObjectsV2(directory);
+
+        List<S3Object> contents = listObjectsV2Response.contents();
+        return contents.stream()
+                .filter(x -> x.key().startsWith(String.valueOf(dirId)))
+                .mapToLong(S3Object::size)
+                .sum();
+    }
 
     @Override
     @SneakyThrows

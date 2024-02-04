@@ -3,6 +3,7 @@ package org.nhavronskyi.filebucketbackend.config;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.nhavronskyi.filebucketbackend.dao.UserRepository;
+import org.nhavronskyi.filebucketbackend.enums.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,6 +46,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/register", "/files/check").permitAll()
+                        .requestMatchers("/admin/").hasRole(Role.ADMIN.name())
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
