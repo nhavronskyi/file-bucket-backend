@@ -6,6 +6,7 @@ import org.nhavronskyi.filebucketbackend.entities.Analysis;
 import org.nhavronskyi.filebucketbackend.entities.User;
 import org.nhavronskyi.filebucketbackend.enums.SavingStatus;
 import org.nhavronskyi.filebucketbackend.service.FileService;
+import org.nhavronskyi.filebucketbackend.service.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -21,17 +22,12 @@ public class FileTransferringController {
     @SneakyThrows
     @PostMapping(value = "save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SavingStatus saveFile(@RequestParam("file") MultipartFile file) {
-        return fileService.save(file, getCurrentUserId());
+        return fileService.save(file, UserService.getCurrentUser().getId());
     }
 
     @SneakyThrows
     @GetMapping(value = "check", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Analysis checkFile(@RequestParam("file") MultipartFile file) {
         return fileService.checkFile(file);
-    }
-
-    private long getCurrentUserId() {
-        var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return user.getId();
     }
 }
