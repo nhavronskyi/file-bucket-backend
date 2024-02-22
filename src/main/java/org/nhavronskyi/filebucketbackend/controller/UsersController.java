@@ -1,9 +1,8 @@
 package org.nhavronskyi.filebucketbackend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.nhavronskyi.filebucketbackend.dao.UserRepository;
 import org.nhavronskyi.filebucketbackend.entities.UserS3Info;
-import org.nhavronskyi.filebucketbackend.service.AwsS3Service;
+import org.nhavronskyi.filebucketbackend.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,20 +14,15 @@ import java.util.List;
 @RequestMapping("admin")
 @RequiredArgsConstructor
 public class UsersController {
-    private final UserRepository repository;
-    private final AwsS3Service service;
+    private final UserService userService;
 
     @GetMapping("user")
     public UserS3Info getUser(@RequestParam String email) {
-        return repository.findByEmail(email)
-                .map(user -> new UserS3Info(service, user.getId()))
-                .orElse(null);
+        return userService.getUserByEmail(email);
     }
 
     @GetMapping("users")
     public List<UserS3Info> getAllUsers() {
-        return repository.findAll().stream()
-                .map(user -> new UserS3Info(service, user.getId()))
-                .toList();
+        return userService.getUserAllUsers();
     }
 }

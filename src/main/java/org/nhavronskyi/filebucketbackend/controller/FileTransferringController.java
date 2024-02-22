@@ -5,7 +5,6 @@ import lombok.SneakyThrows;
 import org.nhavronskyi.filebucketbackend.entities.Analysis;
 import org.nhavronskyi.filebucketbackend.enums.SavingStatus;
 import org.nhavronskyi.filebucketbackend.service.FileService;
-import org.nhavronskyi.filebucketbackend.service.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +19,7 @@ public class FileTransferringController {
     @SneakyThrows
     @PostMapping(value = "save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SavingStatus saveFile(@RequestParam("file") MultipartFile file) {
-        return fileService.save(file, UserService.getCurrentUser().getId());
+        return fileService.save(file);
     }
 
     @SneakyThrows
