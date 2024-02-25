@@ -17,3 +17,6 @@ aws:
     key:
     secret:
     bucket:
+token:
+  signing:
+    key:
