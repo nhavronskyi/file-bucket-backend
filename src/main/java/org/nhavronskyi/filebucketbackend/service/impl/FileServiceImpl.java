@@ -2,12 +2,15 @@ package org.nhavronskyi.filebucketbackend.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.nhavronskyi.filebucketbackend.entities.Analysis;
+import org.nhavronskyi.filebucketbackend.entities.S3File;
 import org.nhavronskyi.filebucketbackend.enums.SavingStatus;
 import org.nhavronskyi.filebucketbackend.service.FileService;
 import org.nhavronskyi.filebucketbackend.service.UserService;
 import org.nhavronskyi.filebucketbackend.service.VirusTotalService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,5 +33,14 @@ public class FileServiceImpl implements FileService {
     @Override
     public Analysis checkFile(MultipartFile file) {
         return virusTotalService.checkFile(file);
+    }
+
+    @Override
+    public List<S3File> getAllFiles() {
+        return awsS3Service.getDirectoryFilesNamesAndSizes(UserService.getCurrentUser().getId())
+                .entrySet()
+                .stream()
+                .map(o -> new S3File(o.getKey(), o.getValue()))
+                .toList();
     }
 }

@@ -5,11 +5,6 @@ spring:
     password:
   flyway:
     baselineOnMigrate: true
-  security:
-    user:
-      name: admin
-      password: admin
-      roles: ADMIN
 virustotal:
   api-key:
 aws:
@@ -17,3 +12,6 @@ aws:
     key:
     secret:
     bucket:
+token:
+  signing:
+    key:
