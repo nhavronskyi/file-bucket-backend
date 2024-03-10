@@ -3,7 +3,6 @@ package org.nhavronskyi.filebucketbackend.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.nhavronskyi.filebucketbackend.entities.Analysis;
 import org.nhavronskyi.filebucketbackend.entities.S3File;
-import org.nhavronskyi.filebucketbackend.enums.SavingStatus;
 import org.nhavronskyi.filebucketbackend.service.FileService;
 import org.nhavronskyi.filebucketbackend.service.UserService;
 import org.nhavronskyi.filebucketbackend.service.VirusTotalService;
@@ -20,14 +19,15 @@ public class FileServiceImpl implements FileService {
     private final AwsS3ServiceImpl awsS3Service;
 
     @Override
-    public SavingStatus save(MultipartFile file) {
+    public Analysis save(MultipartFile file) {
         var analysis = virusTotalService.checkFile(file);
 
         if (analysis.getMalicious() != 0 || analysis.getSuspicious() != 0) {
-            return SavingStatus.MALICIOUS;
+            return analysis;
         }
 
-        return awsS3Service.save(file, UserService.getCurrentUser().getId());
+        awsS3Service.save(file, UserService.getCurrentUser().getId());
+        return analysis;
     }
 
     @Override

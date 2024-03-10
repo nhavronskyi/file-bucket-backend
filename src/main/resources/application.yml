@@ -5,7 +5,10 @@ spring:
     password:
   flyway:
     baselineOnMigrate: true
-virustotal:
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+virus-total:
   api-key:
 aws:
   s3:

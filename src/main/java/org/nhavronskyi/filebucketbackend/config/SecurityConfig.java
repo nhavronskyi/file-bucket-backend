@@ -31,6 +31,7 @@ public class SecurityConfig {
     @SneakyThrows
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**", "/files/check").permitAll()

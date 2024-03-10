@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.nhavronskyi.filebucketbackend.entities.AuthRequest;
 import org.nhavronskyi.filebucketbackend.entities.AuthResponse;
 import org.nhavronskyi.filebucketbackend.service.AuthenticationService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("auth")
@@ -17,7 +20,7 @@ public class AuthController {
         return authenticationService.register(request);
     }
 
-    @GetMapping("login")
+    @PostMapping("login")
     public AuthResponse login(@RequestBody AuthRequest request) {
         return authenticationService.login(request);
     }
