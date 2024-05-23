@@ -1,0 +1,28 @@
+services:
+  db:
+    container_name: postgres_db
+    image: postgres
+    environment:
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=
+    ports:
+      - 5432:5432
+  backend:
+    container_name: backend
+    build:
+      context: ./file-bucket-backend
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_URL=
+      - SPRING_DATASOURCE_USERNAME=
+      - SPRING_DATASOURCE_PASSWORD=
+      - VIRUS-TOTAL_API-KEY=
+      - AWS_S3_BUCKET=
+      - AWS_S3_KEY=
+      - AWS_S3_SECRET=
+      - AWS_TOKEN_SIGNING_KEY=
+    depends_on:
+      - db
