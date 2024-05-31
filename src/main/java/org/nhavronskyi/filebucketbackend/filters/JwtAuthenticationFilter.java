@@ -1,13 +1,14 @@
 package org.nhavronskyi.filebucketbackend.filters;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.nhavronskyi.filebucketbackend.service.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,38 +17,42 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-
 @RequiredArgsConstructor
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+    @SneakyThrows
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
+                                    @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) {
 
         String authHeader = request.getHeader("Authorization");
-        if (ObjectUtils.isEmpty(authHeader) || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
+
+        if (!ObjectUtils.isEmpty(authHeader) && authHeader.startsWith("Bearer ")) {
+            String jwt = authHeader.substring(7);
+
+            setUserSession(request, jwtService.extractUserName(jwt), SecurityContextHolder.getContext(), jwt);
         }
 
-        String jwt = authHeader.substring(7);
-        String userEmail = jwtService.extractUserName(jwt);
-        if (!ObjectUtils.isEmpty(userEmail)
-                && SecurityContextHolder.getContext().getAuthentication() == null) {
+        filterChain.doFilter(request, response);
+    }
+
+    private void setUserSession(HttpServletRequest request, String userEmail, SecurityContext context, String jwt) {
+        if (!ObjectUtils.isEmpty(userEmail) && context.getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                var authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
+            tokenSetUp(request, context, jwt, userDetails);
         }
-        filterChain.doFilter(request, response);
+    }
+
+    private void tokenSetUp(HttpServletRequest request, SecurityContext context, String jwt, UserDetails userDetails) {
+        if (jwtService.isTokenValid(jwt, userDetails)) {
+            var authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            context.setAuthentication(authToken);
+        }
     }
 }

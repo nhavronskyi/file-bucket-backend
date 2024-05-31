@@ -3,7 +3,7 @@ package org.nhavronskyi.filebucketbackend.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.nhavronskyi.filebucketbackend.entities.S3File;
+import org.nhavronskyi.filebucketbackend.entities.files.S3File;
 import org.nhavronskyi.filebucketbackend.enums.FileStatus;
 import org.nhavronskyi.filebucketbackend.props.AwsS3Props;
 import org.nhavronskyi.filebucketbackend.service.AwsS3Service;

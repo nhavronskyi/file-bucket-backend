@@ -1,7 +1,7 @@
 package org.nhavronskyi.filebucketbackend.service;
 
-import org.nhavronskyi.filebucketbackend.entities.User;
-import org.nhavronskyi.filebucketbackend.entities.UserS3Info;
+import org.nhavronskyi.filebucketbackend.entities.users.User;
+import org.nhavronskyi.filebucketbackend.entities.users.UserS3Info;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;

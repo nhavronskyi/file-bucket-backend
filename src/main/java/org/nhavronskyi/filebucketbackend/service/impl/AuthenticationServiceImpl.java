@@ -2,9 +2,9 @@ package org.nhavronskyi.filebucketbackend.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.nhavronskyi.filebucketbackend.dao.UserRepository;
-import org.nhavronskyi.filebucketbackend.entities.AuthRequest;
-import org.nhavronskyi.filebucketbackend.entities.AuthResponse;
-import org.nhavronskyi.filebucketbackend.entities.User;
+import org.nhavronskyi.filebucketbackend.entities.auth.AuthRequest;
+import org.nhavronskyi.filebucketbackend.entities.auth.AuthResponse;
+import org.nhavronskyi.filebucketbackend.entities.users.User;
 import org.nhavronskyi.filebucketbackend.enums.Role;
 import org.nhavronskyi.filebucketbackend.service.AuthenticationService;
 import org.nhavronskyi.filebucketbackend.service.JwtService;

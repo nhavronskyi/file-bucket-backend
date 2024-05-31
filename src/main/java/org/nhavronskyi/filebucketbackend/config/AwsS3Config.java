@@ -16,13 +16,17 @@ public class AwsS3Config {
     private final AwsS3Props props;
 
     @Bean
-    public S3Client s3Client() {
-        var scp = StaticCredentialsProvider
-                .create(AwsBasicCredentials
-                        .create(props.key(), props.secret()));
+    public S3Client s3Client(StaticCredentialsProvider scp) {
         return S3Client.builder()
                 .region(Region.EU_NORTH_1)
                 .credentialsProvider(scp)
                 .build();
+    }
+
+    @Bean
+    public StaticCredentialsProvider getScp() {
+        return StaticCredentialsProvider
+                .create(AwsBasicCredentials
+                        .create(props.key(), props.secret()));
     }
 }

@@ -1,8 +1,8 @@
 package org.nhavronskyi.filebucketbackend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.nhavronskyi.filebucketbackend.entities.AuthRequest;
-import org.nhavronskyi.filebucketbackend.entities.AuthResponse;
+import org.nhavronskyi.filebucketbackend.entities.auth.AuthRequest;
+import org.nhavronskyi.filebucketbackend.entities.auth.AuthResponse;
 import org.nhavronskyi.filebucketbackend.service.AuthenticationService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

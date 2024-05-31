@@ -1,7 +1,7 @@
 package org.nhavronskyi.filebucketbackend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.nhavronskyi.filebucketbackend.entities.UserS3Info;
+import org.nhavronskyi.filebucketbackend.entities.users.UserS3Info;
 import org.nhavronskyi.filebucketbackend.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

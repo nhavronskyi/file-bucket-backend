@@ -1,8 +1,8 @@
 package org.nhavronskyi.filebucketbackend.service;
 
-import org.nhavronskyi.filebucketbackend.entities.Analysis;
-import org.nhavronskyi.filebucketbackend.entities.S3File;
-import org.nhavronskyi.filebucketbackend.entities.S3SimpleFile;
+import org.nhavronskyi.filebucketbackend.entities.files.Analysis;
+import org.nhavronskyi.filebucketbackend.entities.files.S3File;
+import org.nhavronskyi.filebucketbackend.entities.files.S3SimpleFile;
 import org.nhavronskyi.filebucketbackend.enums.FileStatus;
 import org.springframework.web.multipart.MultipartFile;
 

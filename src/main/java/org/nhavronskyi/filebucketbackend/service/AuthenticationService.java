@@ -1,7 +1,7 @@
 package org.nhavronskyi.filebucketbackend.service;
 
-import org.nhavronskyi.filebucketbackend.entities.AuthRequest;
-import org.nhavronskyi.filebucketbackend.entities.AuthResponse;
+import org.nhavronskyi.filebucketbackend.entities.auth.AuthRequest;
+import org.nhavronskyi.filebucketbackend.entities.auth.AuthResponse;
 
 public interface AuthenticationService {
     AuthResponse register(AuthRequest request);

@@ -2,9 +2,9 @@ package org.nhavronskyi.filebucketbackend.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.nhavronskyi.filebucketbackend.entities.Analysis;
-import org.nhavronskyi.filebucketbackend.entities.S3File;
-import org.nhavronskyi.filebucketbackend.entities.S3SimpleFile;
+import org.nhavronskyi.filebucketbackend.entities.files.Analysis;
+import org.nhavronskyi.filebucketbackend.entities.files.S3File;
+import org.nhavronskyi.filebucketbackend.entities.files.S3SimpleFile;
 import org.nhavronskyi.filebucketbackend.enums.FileStatus;
 import org.nhavronskyi.filebucketbackend.service.FileService;
 import org.springframework.http.MediaType;

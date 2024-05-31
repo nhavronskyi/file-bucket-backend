@@ -3,7 +3,7 @@ package org.nhavronskyi.filebucketbackend.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.nhavronskyi.filebucketbackend.dao.UserRepository;
-import org.nhavronskyi.filebucketbackend.entities.UserS3Info;
+import org.nhavronskyi.filebucketbackend.entities.users.UserS3Info;
 import org.nhavronskyi.filebucketbackend.service.AwsS3Service;
 import org.nhavronskyi.filebucketbackend.service.UserService;
 import org.springframework.stereotype.Service;

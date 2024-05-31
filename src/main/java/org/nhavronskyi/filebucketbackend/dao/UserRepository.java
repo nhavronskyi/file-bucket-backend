@@ -1,6 +1,6 @@
 package org.nhavronskyi.filebucketbackend.dao;
 
-import org.nhavronskyi.filebucketbackend.entities.User;
+import org.nhavronskyi.filebucketbackend.entities.users.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
