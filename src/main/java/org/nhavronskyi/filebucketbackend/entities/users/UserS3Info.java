@@ -1,4 +1,4 @@
-package org.nhavronskyi.filebucketbackend.entities;
+package org.nhavronskyi.filebucketbackend.entities.users;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.NonNull;

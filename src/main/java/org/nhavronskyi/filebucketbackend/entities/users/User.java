@@ -1,4 +1,4 @@
-package org.nhavronskyi.filebucketbackend.entities;
+package org.nhavronskyi.filebucketbackend.entities.users;
 
 import jakarta.persistence.*;
 import lombok.*;
