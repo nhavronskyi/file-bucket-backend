@@ -3,6 +3,8 @@ package org.nhavronskyi.filebucketbackend.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.nhavronskyi.filebucketbackend.entities.Analysis;
 import org.nhavronskyi.filebucketbackend.entities.S3File;
+import org.nhavronskyi.filebucketbackend.entities.S3SimpleFile;
+import org.nhavronskyi.filebucketbackend.enums.FileStatus;
 import org.nhavronskyi.filebucketbackend.service.FileService;
 import org.nhavronskyi.filebucketbackend.service.UserService;
 import org.nhavronskyi.filebucketbackend.service.VirusTotalService;
@@ -26,7 +28,8 @@ public class FileServiceImpl implements FileService {
             return analysis;
         }
 
-        awsS3Service.save(file, UserService.getCurrentUser().getId());
+        var status = awsS3Service.save(file, UserService.getCurrentUser().getId());
+        analysis.setFileStatus(status.name());
         return analysis;
     }
 
@@ -36,11 +39,21 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<S3File> getAllFiles() {
+    public List<S3SimpleFile> getAllFiles() {
         return awsS3Service.getDirectoryFilesNamesAndSizes(UserService.getCurrentUser().getId())
                 .entrySet()
                 .stream()
-                .map(o -> new S3File(o.getKey(), o.getValue()))
+                .map(o -> new S3SimpleFile(o.getKey(), o.getValue()))
                 .toList();
+    }
+
+    @Override
+    public S3File getFile(String key) {
+        return awsS3Service.getFile(UserService.getCurrentUser().getId(), key);
+    }
+
+    @Override
+    public FileStatus deleteFile(String key) {
+        return awsS3Service.deleteFile(UserService.getCurrentUser().getId(), key);
     }
 }

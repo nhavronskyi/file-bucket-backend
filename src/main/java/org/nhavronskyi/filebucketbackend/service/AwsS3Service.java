@@ -1,6 +1,7 @@
 package org.nhavronskyi.filebucketbackend.service;
 
-import org.nhavronskyi.filebucketbackend.enums.SavingStatus;
+import org.nhavronskyi.filebucketbackend.entities.S3File;
+import org.nhavronskyi.filebucketbackend.enums.FileStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
@@ -10,5 +11,10 @@ public interface AwsS3Service {
 
     Long getDirectorySize(long dirId);
 
-    SavingStatus save(MultipartFile file, long dirId);
+    FileStatus save(MultipartFile file, long dirId);
+
+    S3File getFile(long dirId, String fileId);
+
+    FileStatus deleteFile(long dirId, String fileId);
+
 }

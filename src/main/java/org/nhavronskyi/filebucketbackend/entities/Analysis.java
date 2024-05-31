@@ -9,4 +9,5 @@ public class Analysis {
     private int malicious;
     private int suspicious;
     private int undetected;
+    private String fileStatus;
 }

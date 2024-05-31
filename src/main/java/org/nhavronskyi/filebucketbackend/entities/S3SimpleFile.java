@@ -1,4 +1,4 @@
 package org.nhavronskyi.filebucketbackend.entities;
 
-public record S3File(String name, byte[] content) {
+public record S3SimpleFile(String name, Long size) {
 }
