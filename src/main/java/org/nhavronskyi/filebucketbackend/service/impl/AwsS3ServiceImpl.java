@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,30 +28,15 @@ public class AwsS3ServiceImpl implements AwsS3Service {
 
     @Override
     public Map<String, Long> getDirectoryFilesNamesAndSizes(long dirId) {
-        var directory = ListObjectsV2Request.builder()
-                .bucket(props.bucket())
-                .build();
-
-        ListObjectsV2Response listObjectsV2Response = s3Client.listObjectsV2(directory);
-
-        List<S3Object> contents = listObjectsV2Response.contents();
-
-        return contents.stream()
-                .filter(x -> x.key().startsWith(String.valueOf(dirId)))
+        return getObjectsFromDirectory(dirId)
+                .stream()
                 .collect(Collectors.toMap(x -> x.key().replace(dirId + "/", ""), S3Object::size));
     }
 
     @Override
     public Long getDirectorySize(long dirId) {
-        var directory = ListObjectsV2Request.builder()
-                .bucket(props.bucket())
-                .build();
-
-        ListObjectsV2Response listObjectsV2Response = s3Client.listObjectsV2(directory);
-
-        List<S3Object> contents = listObjectsV2Response.contents();
-        return contents.stream()
-                .filter(x -> x.key().startsWith(String.valueOf(dirId)))
+        return getObjectsFromDirectory(dirId)
+                .stream()
                 .mapToLong(S3Object::size)
                 .sum();
     }
@@ -81,18 +67,23 @@ public class AwsS3ServiceImpl implements AwsS3Service {
 
     @Override
     public FileStatus deleteFile(long dirId, String fileId) {
-        var deleteStatus = s3Client.deleteObject(DeleteObjectRequest.builder().build());
-        return deleteStatus.deleteMarker() ? FileStatus.DELETED : FileStatus.ERROR;
+        return s3Client.deleteObject(builder -> builder.bucket(props.bucket())
+                        .key(fileNamePattern(dirId, fileId)))
+                .deleteMarker() ? FileStatus.DELETED : FileStatus.ERROR;
+    }
+
+    private List<S3Object> getObjectsFromDirectory(long dirId) {
+        return s3Client.listObjectsV2(builder -> builder.bucket(props.bucket()))
+                .contents()
+                .stream()
+                .filter(x -> x.key().startsWith(String.valueOf(dirId)))
+                .toList();
     }
 
     private boolean saveHelper(byte[] file, String fileName) {
         try {
-            var putObject = PutObjectRequest.builder()
-                    .bucket(props.bucket())
-                    .key(fileName)
-                    .build();
-
-            s3Client.putObject(putObject, RequestBody.fromBytes(file));
+            s3Client.putObject(builder -> builder.bucket(props.bucket())
+                    .key(fileName), RequestBody.fromBytes(file));
             return true;
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -105,11 +96,8 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     }
 
     private byte[] getObjectHelper(String fileId) throws IOException {
-        var getObject = GetObjectRequest.builder()
-                .bucket(props.bucket())
-                .key(fileId)
-                .build();
-
-        return s3Client.getObject(getObject).readAllBytes();
+        return s3Client.getObject(builder -> builder.bucket(props.bucket())
+                        .key(fileId))
+                .readAllBytes();
     }
 }
