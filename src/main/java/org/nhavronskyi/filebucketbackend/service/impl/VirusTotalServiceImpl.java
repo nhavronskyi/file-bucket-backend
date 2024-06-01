@@ -1,6 +1,7 @@
 package org.nhavronskyi.filebucketbackend.service.impl;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.nhavronskyi.filebucketbackend.entities.files.Analysis;
@@ -21,29 +22,14 @@ public class VirusTotalServiceImpl implements VirusTotalService {
     private final VirusTotalProps virusTotalProps;
     private final RestClient restClient;
 
-    public Analysis checkFile(MultipartFile file) {
-        return getAnalysis(getAnswer(file));
-    }
-
-    private Analysis getAnalysis(String answer) {
-        var res = restClient.get()
-                .uri("https://www.virustotal.com/api/v3/analyses/" + answer)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("x-apikey", virusTotalProps.ApiKey())
-                .retrieve()
-                .toEntity(String.class);
-
-        var stats = new Gson()
-                .fromJson(res.getBody(), JsonObject.class)
+    private static JsonElement parseAnalysis(String res) {
+        return new Gson()
+                .fromJson(res, JsonObject.class)
                 .get("data")
                 .getAsJsonObject()
                 .get("attributes")
                 .getAsJsonObject()
                 .get("stats");
-
-        Analysis analysis = new Gson().fromJson(stats, Analysis.class);
-        setAnalysisStatus(analysis);
-        return analysis;
     }
 
     private static void setAnalysisStatus(Analysis analysis) {
@@ -56,6 +42,27 @@ public class VirusTotalServiceImpl implements VirusTotalService {
         }
     }
 
+    public Analysis checkFile(MultipartFile file) {
+        return getAnalysis(getAnswer(file));
+    }
+
+    private Analysis getAnalysis(String answer) {
+        var res = getResultFromAswer(answer);
+
+        Analysis analysis = new Gson().fromJson(parseAnalysis(res), Analysis.class);
+        setAnalysisStatus(analysis);
+        return analysis;
+    }
+
+    private String getResultFromAswer(String answer) {
+        return restClient.get()
+                .uri("https://www.virustotal.com/api/v3/analyses/" + answer)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("x-apikey", virusTotalProps.ApiKey())
+                .retrieve()
+                .toEntity(String.class)
+                .getBody();
+    }
 
     private String getAnswer(MultipartFile file) {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
