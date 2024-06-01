@@ -1,9 +1,10 @@
 package org.nhavronskyi.filebucketbackend.service;
 
 import org.nhavronskyi.filebucketbackend.entities.files.Analysis;
-import org.nhavronskyi.filebucketbackend.entities.files.S3File;
 import org.nhavronskyi.filebucketbackend.entities.files.S3SimpleFile;
 import org.nhavronskyi.filebucketbackend.enums.FileStatus;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface FileService {
 
     List<S3SimpleFile> getAllFiles();
 
-    S3File getFile(String key);
+    ResponseEntity<InputStreamResource> getFile(String key);
 
     FileStatus deleteFile(String key);
 }

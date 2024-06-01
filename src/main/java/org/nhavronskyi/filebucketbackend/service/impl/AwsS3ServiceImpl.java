@@ -3,10 +3,13 @@ package org.nhavronskyi.filebucketbackend.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.nhavronskyi.filebucketbackend.entities.files.S3File;
 import org.nhavronskyi.filebucketbackend.enums.FileStatus;
 import org.nhavronskyi.filebucketbackend.props.AwsS3Props;
 import org.nhavronskyi.filebucketbackend.service.AwsS3Service;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -14,6 +17,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +34,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     public Map<String, Long> getDirectoryFilesNamesAndSizes(long dirId) {
         return getObjectsFromDirectory(dirId)
                 .stream()
+                .filter(x -> x.key().split("/")[0].equals(String.valueOf(dirId)))
                 .collect(Collectors.toMap(x -> x.key().replace(dirId + "/", ""), S3Object::size));
     }
 
@@ -60,16 +65,27 @@ public class AwsS3ServiceImpl implements AwsS3Service {
 
     @SneakyThrows
     @Override
-    public S3File getFile(long dirId, String fileId) {
+    public ResponseEntity<InputStreamResource> getFile(long dirId, String fileId) {
         byte[] content = getObjectHelper(fileNamePattern(dirId, fileId));
-        return new S3File(fileId, content);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content);
+        InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileId)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(content.length)
+                .body(resource);
     }
 
     @Override
     public FileStatus deleteFile(long dirId, String fileId) {
-        return s3Client.deleteObject(builder -> builder.bucket(props.bucket())
-                        .key(fileNamePattern(dirId, fileId)))
-                .deleteMarker() ? FileStatus.DELETED : FileStatus.ERROR;
+        try {
+            s3Client.deleteObject(builder -> builder.bucket(props.bucket())
+                    .key(fileNamePattern(dirId, fileId)));
+            return FileStatus.DELETED;
+        } catch (Exception e) {
+            return FileStatus.ERROR;
+        }
     }
 
     private List<S3Object> getObjectsFromDirectory(long dirId) {
@@ -96,6 +112,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     }
 
     private byte[] getObjectHelper(String fileId) throws IOException {
+        System.out.println(fileId);
         return s3Client.getObject(builder -> builder.bucket(props.bucket())
                         .key(fileId))
                 .readAllBytes();

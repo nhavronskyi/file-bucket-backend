@@ -2,12 +2,13 @@ package org.nhavronskyi.filebucketbackend.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.nhavronskyi.filebucketbackend.entities.files.Analysis;
-import org.nhavronskyi.filebucketbackend.entities.files.S3File;
 import org.nhavronskyi.filebucketbackend.entities.files.S3SimpleFile;
 import org.nhavronskyi.filebucketbackend.enums.FileStatus;
 import org.nhavronskyi.filebucketbackend.service.FileService;
 import org.nhavronskyi.filebucketbackend.service.UserService;
 import org.nhavronskyi.filebucketbackend.service.VirusTotalService;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,7 +49,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public S3File getFile(String key) {
+    public ResponseEntity<InputStreamResource> getFile(String key) {
         return awsS3Service.getFile(UserService.getCurrentUser().getId(), key);
     }
 

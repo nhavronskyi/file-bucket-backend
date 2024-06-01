@@ -3,11 +3,12 @@ package org.nhavronskyi.filebucketbackend.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.nhavronskyi.filebucketbackend.entities.files.Analysis;
-import org.nhavronskyi.filebucketbackend.entities.files.S3File;
 import org.nhavronskyi.filebucketbackend.entities.files.S3SimpleFile;
 import org.nhavronskyi.filebucketbackend.enums.FileStatus;
 import org.nhavronskyi.filebucketbackend.service.FileService;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +34,7 @@ public class FileTransferringController {
     }
 
     @GetMapping("get-file")
-    public S3File getS3File(@RequestParam String key) {
+    public ResponseEntity<InputStreamResource> getS3File(@RequestParam String key) {
         return fileService.getFile(key);
     }
 
