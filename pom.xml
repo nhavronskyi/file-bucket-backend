@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
+        <version>3.5.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.nhavronskyi</groupId>
     <artifactId>file-bucket-backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>file-bucket-backend</name>
     <description>file-bucket-backend</description>
     <properties>
@@ -111,7 +111,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -128,5 +127,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
