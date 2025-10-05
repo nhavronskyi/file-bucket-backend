@@ -22,10 +22,6 @@ public class VirusTotalServiceImpl implements VirusTotalService {
     private final VirusTotalProps virusTotalProps;
     private final RestClient restClient;
 
-    public Analysis checkFile(MultipartFile file) {
-        return getAnalysis(getAnswer(file));
-    }
-
     private static JsonElement parseAnalysis(String res) {
         return new Gson()
                 .fromJson(res, JsonObject.class)
@@ -44,6 +40,10 @@ public class VirusTotalServiceImpl implements VirusTotalService {
         } else {
             analysis.setFileStatus(FileStatus.OK.name());
         }
+    }
+
+    public Analysis checkFile(MultipartFile file) {
+        return getAnalysis(getAnswer(file));
     }
 
     private Analysis getAnalysis(String answer) {
